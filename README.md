@@ -23,8 +23,8 @@
 
 1. 克隆仓库：
 ```bash
-git clone [仓库地址]
-cd [项目目录]
+git clone https://github.com/ructang/AI_summary.git
+cd AI_summary
 ```
 
 2. 安装依赖：
