@@ -1,0 +1,180 @@
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --accent-color: #e74c3c;
+    --background-color: #1a1a1a;
+    --card-background: rgba(255, 255, 255, 0.95);
+    --text-color: #2c3e50;
+}
+
+body {
+    background-color: var(--background-color);
+    min-height: 100vh;
+    padding: 2rem 0;
+    color: var(--text-color);
+    position: relative;
+}
+
+.particles-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.main-card {
+    background: var(--card-background);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    padding: 2rem;
+    margin-top: 2rem;
+    backdrop-filter: blur(10px);
+}
+
+.logo-image {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 1.5rem;
+}
+
+.system-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    background: linear-gradient(45deg, #3498db, #2ecc71);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+}
+
+.system-description {
+    color: #666;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.input-container {
+    margin-bottom: 2rem;
+}
+
+.input-group {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.form-control {
+    border: none;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    background: #f8f9fa;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    background: #fff;
+}
+
+.btn-process {
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+    background: linear-gradient(45deg, #3498db, #2ecc71);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-process:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+.progress-container {
+    margin-bottom: 2rem;
+}
+
+.progress {
+    height: 12px;
+    border-radius: 6px;
+    background: #f0f0f0;
+}
+
+.progress-bar {
+    background: linear-gradient(45deg, #3498db, #2ecc71);
+}
+
+.log-container {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.log-header {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.logs {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 1rem;
+    background: #fff;
+    border-radius: 5px;
+}
+
+.btn-download {
+    padding: 0.8rem 2rem;
+    font-size: 1.1rem;
+    background: linear-gradient(45deg, #2ecc71, #27ae60);
+    border: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-download:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 1rem 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    backdrop-filter: blur(5px);
+}
+
+/* 动画效果 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .system-title {
+        font-size: 2rem;
+    }
+    
+    .system-description {
+        font-size: 1rem;
+    }
+    
+    .main-card {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+} 
