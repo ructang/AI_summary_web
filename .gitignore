@@ -4,7 +4,6 @@ __pycache__/
 *$py.class
 *.so
 .Python
-env/
 build/
 develop-eggs/
 dist/
@@ -21,9 +20,10 @@ wheels/
 .installed.cfg
 *.egg
 
-# 虚拟环境
+# Virtual Environment
 venv/
 ENV/
+env/
 .env
 
 # IDE
@@ -32,7 +32,7 @@ ENV/
 *.swp
 *.swo
 
-# 项目特定
+# Project specific
 outputs/
 temp_audio/
 *.log
