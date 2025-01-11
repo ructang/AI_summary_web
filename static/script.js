@@ -3,45 +3,49 @@ let progressCount = 0;
 let totalSteps = 0;
 
 function processUrl() {
-    const urlInput = document.getElementById('urlInput');
-    const processBtn = document.getElementById('processBtn');
-    const spinner = processBtn.querySelector('.spinner-border');
-    const progressBar = document.getElementById('progressBar');
-    const logContainer = document.getElementById('logContainer');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const logs = document.getElementById('logs');
-
-    if (!urlInput.value) {
+    const url = document.getElementById('urlInput').value;
+    if (!url) {
         alert('请输入URL');
         return;
     }
 
-    // 重置状态
-    progressCount = 0;
-    totalSteps = 0;
-    logs.innerHTML = '';
-    progressBar.querySelector('.progress-bar').style.width = '0%';
+    // 显示进度条
+    document.getElementById('progressBar').classList.remove('d-none');
     
-    // 显示进度元素
-    processBtn.disabled = true;
-    spinner.classList.remove('d-none');
-    progressBar.classList.remove('d-none');
-    logContainer.classList.remove('d-none');
-    downloadBtn.classList.add('d-none');
-
-    // 发送请求
     fetch('/process', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ url: urlInput.value })
+        body: JSON.stringify({url: url})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.task_id) {
+            pollTaskStatus(data.task_id);
+        }
     })
     .catch(error => {
         console.error('Error:', error);
-        addLog('处理失败: ' + error.message, 'text-danger');
-        resetUI();
+        alert('处理失败');
     });
+}
+
+function pollTaskStatus(taskId) {
+    const interval = setInterval(() => {
+        fetch(`/task/${taskId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.state === 'SUCCESS') {
+                clearInterval(interval);
+                document.getElementById('downloadBtn').classList.remove('d-none');
+                alert('处理完成！');
+            } else if (data.state === 'FAILURE') {
+                clearInterval(interval);
+                alert('处理失败：' + data.status);
+            }
+        });
+    }, 2000);
 }
 
 function downloadResult() {

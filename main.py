@@ -7,8 +7,16 @@ from utils.audio_processor import AudioProcessor
 from config import settings
 import mimetypes
 import requests
+from celery import Celery
 
 logging.basicConfig(level=logging.INFO)
+
+celery = Celery('tasks')
+
+@celery.task
+def process_content(url):
+    summarizer = ContentSummarizer()
+    return summarizer.process_url(url)
 
 class ContentSummarizer:
     def __init__(self):
