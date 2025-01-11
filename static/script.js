@@ -1,17 +1,82 @@
+// 初始化Socket.IO连接
 const socket = io();
-let progressCount = 0;
-let totalSteps = 0;
 
+// 生成浮动图标
+function initFloatingIcons() {
+    const container = document.querySelector('.floating-icons');
+    const icons = ['fa-microchip', 'fa-brain', 'fa-network-wired'];
+    
+    // 创建6个浮动图标
+    for (let i = 0; i < 6; i++) {
+        const icon = document.createElement('div');
+        icon.className = 'floating-icon';
+        icon.innerHTML = `<i class="fas ${icons[i % icons.length]} fa-3x"></i>`;
+        
+        // 随机位置
+        icon.style.left = `${Math.random() * 90}%`;
+        icon.style.top = `${Math.random() * 90}%`;
+        icon.style.transform = `rotate(${Math.random() * 360}deg)`;
+        icon.style.animationDuration = `${5 + Math.random() * 5}s`;
+        
+        container.appendChild(icon);
+    }
+    
+    // 创建粒子效果
+    for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.animationDelay = `${Math.random() * 2}s`;
+        particle.style.animationDuration = `${3 + Math.random() * 4}s`;
+        
+        container.appendChild(particle);
+    }
+}
+
+// 处理文本输入
+function handleTextInput() {
+    showUrlInput('请输入网页链接...');
+}
+
+// 处理音频输入
+function handleAudioInput() {
+    showUrlInput('请输入音频链接...');
+}
+
+// 处理文件上传
+function handleUpload() {
+    // TODO: 实现文件上传功能
+    alert('文件上传功能即将推出');
+}
+
+// 显示URL输入框
+function showUrlInput(placeholder) {
+    const inputGroup = document.getElementById('urlInputGroup');
+    const urlInput = document.getElementById('urlInput');
+    
+    inputGroup.classList.remove('d-none');
+    urlInput.placeholder = placeholder;
+    urlInput.focus();
+}
+
+// 处理URL
 function processUrl() {
     const url = document.getElementById('urlInput').value;
     if (!url) {
-        alert('请输入URL');
+        alert('请输入链接');
         return;
     }
 
-    // 显示进度条
-    document.getElementById('progressBar').classList.remove('d-none');
+    // 显示进度相关元素
+    document.getElementById('progressContainer').classList.remove('d-none');
+    document.getElementById('logsContainer').classList.remove('d-none');
     
+    // 禁用处理按钮
+    const processBtn = document.getElementById('processBtn');
+    processBtn.disabled = true;
+    
+    // 发送处理请求
     fetch('/process', {
         method: 'POST',
         headers: {
@@ -27,10 +92,12 @@ function processUrl() {
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('处理失败');
+        addLog('处理失败', 'error');
+        resetUI();
     });
 }
 
+// 轮询任务状态
 function pollTaskStatus(taskId) {
     const interval = setInterval(() => {
         fetch(`/task/${taskId}`)
@@ -39,24 +106,23 @@ function pollTaskStatus(taskId) {
             if (data.state === 'SUCCESS') {
                 clearInterval(interval);
                 document.getElementById('downloadBtn').classList.remove('d-none');
-                alert('处理完成！');
+                addLog('处理完成！', 'success');
+                resetUI();
             } else if (data.state === 'FAILURE') {
                 clearInterval(interval);
-                alert('处理失败：' + data.status);
+                addLog(`处理失败：${data.status}`, 'error');
+                resetUI();
             }
         });
     }, 2000);
 }
 
-function downloadResult() {
-    window.location.href = '/download';
-}
-
-function addLog(message, className = '') {
+// 添加日志
+function addLog(message, type = '') {
     const logs = document.getElementById('logs');
     const log = document.createElement('div');
-    log.className = className + ' animate-fade-in';
-    log.textContent = message;
+    log.className = `log-entry ${type}`;
+    log.innerHTML = `<i class="fas fa-chevron-right"></i> ${message}`;
     logs.appendChild(log);
     logs.scrollTop = logs.scrollHeight;
 
@@ -64,35 +130,43 @@ function addLog(message, className = '') {
     if (message.includes('处理第')) {
         const match = message.match(/处理第 (\d+)\/(\d+)/);
         if (match) {
-            progressCount = parseInt(match[1]);
-            totalSteps = parseInt(match[2]);
-            updateProgress();
+            updateProgress(parseInt(match[1]), parseInt(match[2]));
         }
     }
 }
 
-function updateProgress() {
-    const progressBar = document.getElementById('progressBar').querySelector('.progress-bar');
-    const progress = (progressCount / totalSteps) * 100;
-    progressBar.style.width = `${progress}%`;
+// 更新进度条
+function updateProgress(current, total) {
+    const progressFill = document.getElementById('progressFill');
+    const progress = (current / total) * 100;
+    progressFill.style.width = `${progress}%`;
 }
 
+// 重置UI状态
 function resetUI() {
     const processBtn = document.getElementById('processBtn');
-    const spinner = processBtn.querySelector('.spinner-border');
     processBtn.disabled = false;
-    spinner.classList.add('d-none');
 }
 
-// Socket.io 事件处理
+// 下载结果
+function downloadResult() {
+    window.location.href = '/download';
+}
+
+// Socket.IO事件处理
 socket.on('progress', function(data) {
     addLog(data.message);
 });
 
 socket.on('complete', function(data) {
-    addLog(data.message, data.status === 'success' ? 'text-success' : 'text-danger');
+    addLog(data.message, data.status === 'success' ? 'success' : 'error');
     resetUI();
     if (data.status === 'success') {
         document.getElementById('downloadBtn').classList.remove('d-none');
     }
+});
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', function() {
+    initFloatingIcons();
 }); 

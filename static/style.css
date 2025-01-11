@@ -1,99 +1,255 @@
-﻿body {
-    background-color: #f5f5f5;
+﻿/* 基础样式 */
+body {
+    background: linear-gradient(to bottom, #0f172a, #312e81);
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    position: relative;
-}
-
-.particles-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
+    color: #fff;
 }
 
 .container {
-    padding-top: 2rem;
-    padding-bottom: 4rem;
-}
-
-.main-card {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 15px;
     padding: 2rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-.logo-image {
-    width: 120px;
-    height: 120px;
-    margin-bottom: 1rem;
+/* 未来主义界面元素 */
+.futuristic-interface {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
 }
 
-.system-title {
-    color: #2c3e50;
-    font-size: 2rem;
-    margin-bottom: 1rem;
+.floating-icons {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
 }
 
-.system-description {
-    color: #7f8c8d;
-    margin-bottom: 2rem;
+.floating-icon {
+    position: absolute;
+    color: rgba(59, 130, 246, 0.1);
+    animation: float 5s infinite ease-in-out;
 }
 
-.input-container {
-    margin-bottom: 2rem;
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(59, 130, 246, 0.2);
+    border-radius: 50%;
+    animation: pulse 3s infinite;
 }
 
-.btn-process {
-    min-width: 120px;
+/* 机器人头像 */
+.robot-avatar {
+    width: 200px;
+    height: 200px;
+    flex-shrink: 0;
+    position: relative;
+    border-radius: 50%;
+    background: #000;
+    padding: 4px;
 }
 
-.progress {
-    height: 10px;
-    margin: 1rem 0;
-}
-
-.log-container {
-    background: #2c3e50;
-    border-radius: 8px;
-    margin-top: 1rem;
+.robot-avatar-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #000;
+    position: relative;
     overflow: hidden;
 }
 
-.log-header {
-    background: #34495e;
-    color: white;
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
+.robot-glow {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, rgba(0, 255, 0, 0.2), rgba(0, 255, 0, 0.1));
+    animation: pulse 2s infinite;
 }
 
-.logs {
-    color: #ecf0f1;
+/* 标题区域 */
+.title-section {
+    text-align: left;
+    margin-bottom: 4rem;
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+}
+
+.title-content {
+    flex-grow: 1;
+}
+
+.main-title {
+    font-size: 4rem;
+    font-weight: bold;
+    background: linear-gradient(to right, #60a5fa, #a855f7, #2dd4bf);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 1rem;
+}
+
+.subtitle {
+    font-size: 2rem;
+    color: #94a3b8;
+}
+
+/* 主要操作区域 */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.action-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+    background: rgba(99, 102, 241, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 1.5rem;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    transition: all 0.3s;
+    cursor: pointer;
+    min-width: 200px;
+}
+
+.action-button:hover {
+    background: rgba(99, 102, 241, 0.25);
+    transform: translateY(-2px);
+    border-color: rgba(99, 102, 241, 0.5);
+}
+
+.action-button-icon {
+    width: 5rem;
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(99, 102, 241, 0.2);
+    transition: background 0.3s;
+}
+
+.action-button-icon i {
+    font-size: 2.5rem;
+}
+
+.action-button:hover .action-button-icon {
+    background: rgba(99, 102, 241, 0.3);
+}
+
+.action-button-text {
+    color: #e2e8f0;
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+/* URL输入框 */
+.input-group {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#urlInput {
+    font-size: 1.2rem;
+    padding: 1rem;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+#processBtn {
+    font-size: 1.2rem;
+    padding: 1rem 2rem;
+    background: rgba(99, 102, 241, 0.8);
+    border: none;
+}
+
+/* 进度条 */
+.progress-container {
+    margin: 2rem 0;
+}
+
+.progress-bar {
+    height: 8px;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(to right, #60a5fa, #a855f7);
+    transition: width 0.3s;
+    width: 0;
+}
+
+/* 日志区域 */
+.logs-container {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    overflow: hidden;
+    margin-top: 2rem;
+}
+
+.logs-header {
+    padding: 1rem;
+    background: rgba(59, 130, 246, 0.1);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.logs-content {
     padding: 1rem;
     max-height: 200px;
     overflow-y: auto;
     font-family: monospace;
-    font-size: 0.9rem;
 }
 
-.animate-fade-in {
-    animation: fadeIn 0.5s ease-in;
+.log-entry {
+    margin-bottom: 0.5rem;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+/* 动画 */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    padding: 1rem 0;
-    background: rgba(255, 255, 255, 0.9);
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .action-button {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .main-title {
+        font-size: 2rem;
+    }
 }
