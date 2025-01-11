@@ -105,24 +105,45 @@ function pollTaskStatus(taskId) {
         .then(data => {
             if (data.state === 'SUCCESS') {
                 clearInterval(interval);
-                document.getElementById('downloadBtn').classList.remove('d-none');
-                addLog('处理完成！', 'success');
+                if (data.result && data.result.status === 'success') {
+                    document.getElementById('downloadBtn').classList.remove('d-none');
+                    addLog('处理完成！', 'success');
+                } else {
+                    addLog(`处理失败：${data.result ? data.result.message : '未知错误'}`, 'error');
+                }
                 resetUI();
             } else if (data.state === 'FAILURE') {
                 clearInterval(interval);
-                addLog(`处理失败：${data.status}`, 'error');
+                addLog(`处理失败：${data.status || '任务执行失败'}`, 'error');
                 resetUI();
+            } else if (data.state === 'PROGRESS') {
+                addLog(data.status || '处理中...', 'info');
+            } else if (data.state === 'PENDING') {
+                addLog('任务等待中...', 'info');
             }
+        })
+        .catch(error => {
+            clearInterval(interval);
+            console.error('Error:', error);
+            addLog('系统错误，请稍后重试', 'error');
+            resetUI();
         });
     }, 2000);
 }
 
 // 添加日志
-function addLog(message, type = '') {
+function addLog(message, type = 'info') {
     const logs = document.getElementById('logs');
     const log = document.createElement('div');
     log.className = `log-entry ${type}`;
-    log.innerHTML = `<i class="fas fa-chevron-right"></i> ${message}`;
+    
+    // 根据消息类型选择图标
+    let icon = 'info-circle';
+    if (type === 'error') icon = 'times-circle';
+    if (type === 'success') icon = 'check-circle';
+    if (type === 'warning') icon = 'exclamation-circle';
+    
+    log.innerHTML = `<i class="fas fa-${icon}"></i> ${message}`;
     logs.appendChild(log);
     logs.scrollTop = logs.scrollHeight;
 

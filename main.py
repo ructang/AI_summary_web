@@ -11,12 +11,46 @@ from celery import Celery
 
 logging.basicConfig(level=logging.INFO)
 
-celery = Celery('tasks')
+# 配置Celery
+celery = Celery('main')
 
-@celery.task
-def process_content(url):
-    summarizer = ContentSummarizer()
-    return summarizer.process_url(url)
+# 首先加载基本配置
+celery.config_from_object('celery_config')
+
+# 然后确保关键配置被正确设置
+app_config = {
+    'broker_url': settings.REDIS_URL,
+    'result_backend': settings.REDIS_URL,
+    'task_serializer': 'json',
+    'result_serializer': 'json',
+    'accept_content': ['json'],
+    'timezone': 'Asia/Shanghai',
+    'task_track_started': True,
+    'worker_pool': 'solo',
+    'broker_connection_retry_on_startup': True,
+    'worker_max_tasks_per_child': 1,
+    'worker_prefetch_multiplier': 1,
+    'worker_concurrency': 1,
+    'task_acks_late': True,
+    'task_reject_on_worker_lost': True
+}
+
+celery.conf.update(app_config)
+
+@celery.task(bind=True, name='main.process_content')
+def process_content(self, url):
+    try:
+        logging.info(f"开始处理URL: {url}")
+        self.update_state(state='PROGRESS', meta={'message': '正在初始化...'})
+        
+        summarizer = ContentSummarizer()
+        result = summarizer.process_url(url)
+        
+        logging.info("处理完成")
+        return {"status": "success", "result": result}
+    except Exception as e:
+        logging.error(f"处理失败: {str(e)}", exc_info=True)
+        return {"status": "error", "message": str(e)}
 
 class ContentSummarizer:
     def __init__(self):
